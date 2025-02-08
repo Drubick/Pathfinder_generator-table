@@ -1,45 +1,22 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
 
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+@theme{
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
+/* Light Mode - Versión Ajustada */
+  --color-pre-primary-light: hsl(210, 15%, 92%); 
+  --color-secondary-light:   hsl(210, 20%, 87%); 
+  --color-primary-light:     hsl(210, 10%, 20%); 
+  --color-tertiary-light:    hsl(210, 20%, 70%); 
+  --color-accent-light:      hsl(45,  55%, 50%);
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+  /* Dark Mode */
+  --color-pre-primary-dark: hsl(210, 15%, 10%); /* Background color de la página */
+  --color-primary-dark:     hsl(210, 10%, 75%); /* Color del texto */
+  --color-secondary-dark:   hsl(210, 20%, 5%); /* Background del menú de navegación */
+  --color-tertiary-dark:    hsl(210, 20%, 20%); /* Color de los botones */
+  --color-accent-dark:      hsl(30, 40%, 45%); /* Color de acento */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
