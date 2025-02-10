@@ -5,11 +5,12 @@
 @theme{
 
 /* Light Mode - Versión Ajustada */
-  --color-pre-primary-light: hsl(210, 15%, 92%); 
+  --color-pre-primary-light: hsl(210, 15%, 92%);
   --color-secondary-light:   hsl(210, 20%, 87%); 
   --color-primary-light:     hsl(210, 10%, 20%); 
   --color-tertiary-light:    hsl(210, 20%, 70%); 
   --color-accent-light:      hsl(45,  55%, 50%);
+  --color-accent-light-2:    hsl(45,  25%, 87%);
 
 
   /* Dark Mode */
@@ -18,5 +19,7 @@
   --color-secondary-dark:   hsl(210, 20%, 5%); /* Background del menú de navegación */
   --color-tertiary-dark:    hsl(210, 20%, 20%); /* Color de los botones */
   --color-accent-dark:      hsl(30, 40%, 45%); /* Color de acento */
+  --color-accent-dark-2:    hsl(30, 25%, 18%); 
+
 }
 
