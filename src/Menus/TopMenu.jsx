@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import TopMenuButton from './TopMenuButton';
 
-export default function TopMenu() {
+export default function TopMenu({setContent}) {
     const [darkMode, setDarkMode] = useState(false);
 
     const toggleDarkMode = () => {
@@ -14,9 +14,9 @@ export default function TopMenu() {
     };
 
     return (
-        <div className="bg-secondary-light dark:bg-secondary-dark h-18">
+        <div className="bg-secondary-light dark:bg-secondary-dark h-14">
             <div className="flex items-end h-full w-full px-2 py-1" >
-                <TopMenuButton  />
+                <TopMenuButton setContent={setContent} />
                 <button 
                     onClick={toggleDarkMode} 
                     className="bg-tertiary-light dark:bg-tertiary-dark font-bold py-1.5 px-1.5 rounded-full ml-auto hover:cursor-pointer "

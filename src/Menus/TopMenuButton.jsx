@@ -2,17 +2,17 @@ import { useState, useEffect, useRef } from 'react';
 
 const navItems = [
     {
-        title: "Random Generators", options: ["Encounter Generator", "Map Generator"], colapsed: true, 
+        title: "Random Generators", options: ["Combat Generator", "Map Generator"], colapsed: true, 
     },
     {
         title: "Builders", options: ["Encounter Builders", "Map Builder"], colapsed: true
     },
     {
-        title: "AI Assistance", options: ["General chatbot", "Combat generator"], colapsed: true
+        title: "AI Assistance", options: ["AI General chatbot", "AI Combat generator"], colapsed: true
     }
 ];
 
-export default function TopMenuButton() {
+export default function TopMenuButton({setContent}) {
     const [activeIndex, setActiveIndex] = useState(null);
     const buttonRefs = useRef([]);
 
@@ -39,7 +39,7 @@ export default function TopMenuButton() {
             {navItems.map((item, index) => {
                 let buttonClasses = "py-1 drop-shadow-md px-2 font-semibold text-center align-middle transition-all duration-300 " +
                     "ease-in-out border-2 border-solid rounded cursor-pointer select-none hover:text-black " +
-                    "dark:hover:text-white hover:border-accent-light dark:hover:border-accent-dark shadow-2xl text-xs";
+                    "dark:hover:text-white hover:border-accent-light dark:hover:border-accent-dark shadow-2xl text-[16px]";
 
                 if (activeIndex === index) {
                     buttonClasses += " bg-accent-light dark:bg-accent-dark dark:text-white border-accent-light dark:border-accent-dark";
@@ -53,13 +53,14 @@ export default function TopMenuButton() {
                         >
                             {item.title} <span className='ml-2'>{activeIndex === index ? '▲' : '▼'}</span>
                         </button>
+                        
                         {activeIndex === index && (
                             <div className="absolute bg-pre-primary-light dark:bg-pre-primary-dark 
                             border-0 border-solid rounded drop-shadow-md hover:cursor-pointer ">
                                 {item.options.map((option, index) => {
                                     return (
-                                        <div key={index} className="px-2 py-1 hover:bg-accent-light-2 dark:hover:bg-accent-dark-2
-                                        ">
+                                        <div key={index} className="px-2 py-1 hover:bg-accent-light-2 dark:hover:bg-accent-dark-2"
+                                             onClick={() => {setContent(option)}}>
                                             {option}
                                         </div>
                                     );

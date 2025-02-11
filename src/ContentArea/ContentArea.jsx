@@ -1,7 +1,8 @@
+import RandomCombatGenerator from "./RandomCombatGenerator";
 
-export default function ContentArea(content) {
-    return(
-        //We just checked that the content area is truly passed trough as {content.content}
-        <div>{content.content}</div>
-    )
-};
+export default function ContentArea({ content }) {
+    return (
+    content === 'Combat Generator' && <RandomCombatGenerator />
+    
+    );
+}
