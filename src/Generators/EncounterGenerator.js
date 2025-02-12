@@ -2,7 +2,7 @@ import { Database, Query, MON } from '../Database/bestiary.db';
 import { randomInt } from 'crypto';
 
 export class Generator {
-    constructor(path = "bestiary.db") {
+    constructor(path = "monsters.db") {
         this._path = path;
         this._database = new Database(path);
         this._monster_list = [];
@@ -123,3 +123,6 @@ export class Generator {
         this.populateEncounter();
     }
 }
+
+const generator = new Generator();
+generator.generate(4, 4, "Trivial");
