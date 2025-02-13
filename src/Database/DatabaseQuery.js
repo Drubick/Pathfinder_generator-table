@@ -1,40 +1,88 @@
 import sqlite3 from 'sqlite3';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 sqlite3.verbose();
-const db = new sqlite3.Database('./monsters.db');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const dbPath = path.resolve(__dirname, './monsters.db');
+const db = new sqlite3.Database(dbPath);
 
-export default function DatabaseQuery(monsterData) {
-    const query = `
-    SELECT * FROM monsters
-    WHERE name LIKE ?
-    AND charisma LIKE ?
-    AND constituion LIKE ?
-    AND dexterity LIKE ?
-    AND intelect LIKE ?
-    AND strenght LIKE ?
-    AND wisdom LIKE ?
-    AND ac LIKE ?
-    AND hp LIKE ?
-    AND inmunities LIKE ?
-    AND other_speeds LIKE ?
-    AND speed LIKE ?
-    AND languages LIKE ?
-    AND level LIKE ?
-    AND perception LIKE ?
-    AND bestiary LIKE ?
-    AND sense LIKE ?
-    AND fortitude_save LIKE ?
-    AND reflex_save LIKE ?
-    AND will_save LIKE ?
-    AND size LIKE ?
-    AND type LIKE ?
-    `
+export default function DatabaseQuery(monsterData, limit = 2) {
+    return new Promise((resolve, reject) => {
+        let query = 'SELECT * FROM monsters WHERE 1=1';
+        const params = [];
 
-    db.all(query, Object.values(monsterData), (err, rows) =>{
-        if (err){
-            console.error(err.nessage);
-            return;
+        if (monsterData.name) {
+            query += ' AND name LIKE ?';
+            params.push(`%${monsterData.name}%`);
         }
-        //replace with a call to another function
-        console.log(rows);
+        if (monsterData.charisma) {
+            query += ' AND charisma LIKE ?';
+            params.push(`%${monsterData.charisma}%`);
+        }
+        if (monsterData.constitution) {
+            query += ' AND constituion LIKE ?';
+            params.push(`%${monsterData.constitution}%`);
+        }
+        if (monsterData.dexterity) {
+            query += ' AND dexterity LIKE ?';
+            params.push(`%${monsterData.dexterity}%`);
+        }
+        if (monsterData.intelect) {
+            query += ' AND intelect LIKE ?';
+            params.push(`%${monsterData.intelect}%`);
+        }
+        if (monsterData.strenght) {
+            query += ' AND strenght LIKE ?';
+            params.push(`%${monsterData.strenght}%`);
+        }
+        if (monsterData.wisdom) {
+            query += ' AND wisdom LIKE ?';
+            params.push(`%${monsterData.wisdom}%`);
+        }
+        if (monsterData.ac) {
+            query += ' AND ac LIKE ?';
+            params.push(`%${monsterData.ac}%`);
+        }
+        if (monsterData.hp) {
+            query += ' AND hp LIKE ?';
+            params.push(`%${monsterData.hp}%`);
+        }
+        if (monsterData.inmunities) {
+            query += ' AND inmunities LIKE ?';
+            params.push(`%${monsterData.inmunities}%`);
+        }
+        if (monsterData.other_speeds) {
+            query += ' AND other_speeds LIKE ?';
+            params.push(`%${monsterData.other_speeds}%`);
+        }
+        if (monsterData.speed) {
+            query += ' AND speed LIKE ?';
+            params.push(`%${monsterData.speed}%`);
+        }
+        if (monsterData.languages) {
+            query += ' AND languages LIKE ?';
+            params.push(`%${monsterData.languages}%`);
+        }
+        if (monsterData.level) {
+            query += ' AND level = ?';
+            params.push(monsterData.level);
+        }
+
+        query += ' ORDER BY RANDOM()';
+
+        if (limit && limit > 0) {
+            query += ' LIMIT ?';
+            params.push(limit);
+        }
+
+        db.all(query, params, (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
     });
-};
+}

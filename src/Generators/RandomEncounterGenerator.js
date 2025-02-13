@@ -1,21 +1,26 @@
+import DatabaseQuery from "../Database/DatabaseQuery.js";
+
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function determineMonsterMaxLevel (data, totalXp){
-    Xp = data.budgetXp - totalXp;
-   if (Xp < 10) {
+ let xp = data.budgetXp- totalXp;
+   if (xp < 10) {
         return -4;
-    }else if (Xp >= 10 && Xp < 15)    {
+    }else if (xp >= 10 && xp < 15)    {
         return -3;    
-    }else if (Xp >= 15 && Xp < 20)    {
+    }else if (xp >= 15 && xp < 20)    {
         return -2;    
-    }else if (Xp >= 20 && Xp < 40)    {
+    }else if (xp >= 20 && xp < 40)    {
         return 0;     
-    }else if (Xp >= 40 && Xp < 60)    {
+    }else if (xp >= 40 && xp < 60)    {
         return 1;     
-    }else if (Xp >= 60 && Xp < 80)    {
+    }else if (xp >= 60 && xp < 80)    {
         return 2; 
-    }else if (Xp >= 80 && Xp < 120)   {
+    }else if (xp >= 80 && xp < 120)   {
         return 3;
-    }else if (Xp >= 120 && Xp <= 160) {
+    }else if (xp >= 120 && xp <= 160) {
         return 4;
     }
     else {
@@ -23,22 +28,41 @@ function determineMonsterMaxLevel (data, totalXp){
     }
 }
 
-function determineMonsterLevel(data, totalXp){
-    let lowestLevel = data.PartyLevel - 4;
-    let highestLevel = data.PartyLevel + determineMonsterMaxLevel(totalXp);
-    lowestLevel < 1 ? lowestLevel = -1 : lowestLevel;
-    highestLevel < 1 ? highestLevel = -1 : highestLevel;
-    lowestLevel > 21 ? lowestLevel = 21 : lowestLevel;
-    highestLevel > 21 ? highestLevel = 21 : highestLevel;
+function determineMonsterXp(data, monsterLevel){
+    const monsterLevelDiff = monsterLevel - data.PartyLevel;
+    const lvlToXp = { '-4': 10, '-3': 15, '-2': 20, '-1':
+        30, '0': 40, '1': 60, '2': 80, '3': 120, '4': 160 };
+    return (lvlToXp[monsterLevelDiff]);
+}
 
-    return randomInt(lowestLevel, highestLevel + 1);
+function determineMonsterLevel(data, totalXp){
+    let lowestLevel = data.minLevel ? data.minLevel : data.PartyLevel - 4;  
+    let highestLevel = data.maxLevel ? data.maxLevel : determineMonsterMaxLevel(totalXp);
+    lowestLevel < -1 ? lowestLevel = -1 : lowestLevel;
+    highestLevel < -1 ? highestLevel = -1 : highestLevel;
+    lowestLevel > 24 ? lowestLevel = 24 : lowestLevel;
+    highestLevel > 24 ? highestLevel = 24 : highestLevel;
+
+    const monsterLevel = randomInt(lowestLevel, highestLevel);
+    return monsterLevel
     }
 
-function chooseMonster(data, totalXp){
-    // INSERT DATABASE QUERY HERE
+async function chooseMonster(data, totalXp) {
     const monsterLevel = determineMonsterLevel(data, totalXp);
-    data.monsterList.push("Monster from a database");
+    try {
+        const rows = await DatabaseQuery({ level: monsterLevel });
+        if (rows.length > 0) {
+            data.monsterList.push(rows[0]);
+        } else {
+            console.log('No monster found');
+            
+        }
+    } catch (err) {
+        console.error(err);
+    }
+    return determineMonsterXp(data, monsterLevel);
 }
+    
 
 
 function getBudgetXp(encounterThreath, partySize){
@@ -60,25 +84,32 @@ function getBudgetXp(encounterThreath, partySize){
 
 }
 
-populateEncounter(data){
+async function populateEncounter(data){
     let totalXp = 0;
     while (totalXp < data.budgetXp - 10){
-        totalXp += chooseMonster(data, totalXp);
+        totalXp += await chooseMonster(data, totalXp);
     }
 }
 
-
-function Generator(partySize, PartyLevel, encounterThreath){
+// TODO: IMPLEMENT A WAY TO SELECT THE NUMBER OF MONSTERS TO GENERATE
+async function Generator(partySize, PartyLevel, encounterThreath, minLevel , maxLevel){
     let data = {
         budgetXp: 0,
         PartyLevel: PartyLevel,
         encounterThreath: encounterThreath,
+        minLevel: minLevel,
+        maxLevel: maxLevel,
         
         monsterList: []
     }
     data.budgetXp = getBudgetXp(encounterThreath, partySize);
-    populateEncounter(data);
+    await populateEncounter(data);
+
+    data.monsterList.forEach(monster => {
+        console.log(monster.name);
+    });
 }
 
+Generator(4, 2, "Trivial", 0, 3);
 
-Generator(2,2,"Trivial")
+export default Generator;
