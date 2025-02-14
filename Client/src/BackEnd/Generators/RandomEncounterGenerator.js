@@ -1,5 +1,7 @@
 import DatabaseQuery from "../Database/DatabaseQuery.js";
 
+console.log("RandomEncounterGenerator module loaded");
+
 function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -92,7 +94,7 @@ async function populateEncounter(data){
 }
 
 // TODO: IMPLEMENT A WAY TO SELECT THE NUMBER OF MONSTERS TO GENERATE
-async function Generator(partySize, PartyLevel, encounterThreath, minLevel , maxLevel){
+async function randomEncounterGenerator(partySize, PartyLevel, encounterThreath, minLevel , maxLevel){
     let data = {
         budgetXp: 0,
         PartyLevel: PartyLevel,
@@ -110,6 +112,4 @@ async function Generator(partySize, PartyLevel, encounterThreath, minLevel , max
     });
 }
 
-Generator(4, 2, "Trivial", 0, 3);
-
-export default Generator;
+export default randomEncounterGenerator;

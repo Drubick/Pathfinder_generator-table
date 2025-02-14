@@ -12,7 +12,10 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.1",
+    "axios": "^1.7.9",
     "chai": "^5.1.2",
+    "cors": "^2.8.5",
+    "module-alias": "^2.2.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sqlite3": "^5.1.7"
