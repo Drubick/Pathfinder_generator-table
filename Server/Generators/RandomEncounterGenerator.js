@@ -4,8 +4,9 @@ function randomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function determineMonsterMaxLevel (data, totalXp){
- let xp = data.budgetXp- totalXp;
+function determineMonsterLevelVariation (data, totalXp){
+ let xp = data.budgetXp - totalXp;
+
    if (xp < 10) {
         return -4;
     }else if (xp >= 10 && xp < 15)    {
@@ -35,14 +36,14 @@ function determineMonsterXp(data, monsterLevel){
     return (lvlToXp[monsterLevelDiff]);
 }
 
+//fuck javascript should have done this on typescript
 function determineMonsterLevel(data, totalXp){
-    let lowestLevel = data.minLevel ? data.minLevel : data.PartyLevel - 4;  
-    let highestLevel = data.maxLevel ? data.maxLevel : determineMonsterMaxLevel(totalXp);
+    let lowestLevel = data.maxLevel ? data.maxLevel : data.PartyLevel - 4;
+    let highestLevel = data.maxLevel ? data.maxLevel : parseInt(data.PartyLevel) + parseInt(determineMonsterLevelVariation(data, totalXp), 10);
     lowestLevel < -1 ? lowestLevel = -1 : lowestLevel;
     highestLevel < -1 ? highestLevel = -1 : highestLevel;
     lowestLevel > 24 ? lowestLevel = 24 : lowestLevel;
-    highestLevel > 24 ? highestLevel = 24 : highestLevel;
-
+    highestLevel > 24 ? highestLevel = 24 : highestLevel;   
     const monsterLevel = randomInt(lowestLevel, highestLevel);
     return monsterLevel
     }
@@ -109,8 +110,6 @@ async function randomEncounterGenerator(partySize, PartyLevel, encounterThreath,
     data.monsterList.forEach(monster => {
         console.log(monster.name);
     });
+    return(data.monsterList)
 }
-
-randomEncounterGenerator(2, 4, "Low")
-
 export default randomEncounterGenerator;

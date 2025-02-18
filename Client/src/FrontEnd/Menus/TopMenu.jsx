@@ -15,7 +15,7 @@ export default function TopMenu({setContent}) {
 
     return (
         <div className="bg-secondary-light dark:bg-secondary-dark h-14">
-            <div className="flex items-end h-full w-full px-2 py-1" >
+            <div className="flex items-end h-full w-full px-2 py-1 overflow-x-auto whitespace-nowrap" >
                 <TopMenuButton setContent={setContent} />
                 <button 
                     onClick={toggleDarkMode} 

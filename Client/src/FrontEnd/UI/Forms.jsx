@@ -7,7 +7,7 @@ export default function Forms({ label, type, name, placeholder, options }) {
             <br />
             {type === 'select' ? (
                 <select
-                    className="w-35 focus:outline-none focus:shadow-outline border rounded leading-tight px-3 py-1 text-primary-light dark:text-primary-dark "
+                    className="w-50 focus:outline-none focus:shadow-outline border rounded leading-tight px-3 py-1 text-primary-light dark:text-primary-dark "
                     name={name}
                     id={name}
                     
@@ -20,7 +20,7 @@ export default function Forms({ label, type, name, placeholder, options }) {
                 </select>
             ) : (
                 <input
-                    className="[&::-webkit-inner-spin-button]:appearance-none w-35 focus:outline-none focus:shadow-outline border rounded leading-tight px-3 py-1 text-primary-light dark:text-primary-dark "
+                    className="[&::-webkit-inner-spin-button]:appearance-none w-50 focus:outline-none focus:shadow-outline border rounded leading-tight px-3 py-1 text-primary-light dark:text-primary-dark "
                     type={type}
                     name={name}
                     id={name}

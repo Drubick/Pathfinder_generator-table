@@ -6,6 +6,7 @@
 
 /* Light Mode - Versión Ajustada */
   --color-pre-primary-light: hsl(210, 15%, 92%);
+  --color-pre-primary-light-100: hsl(210, 15%, 88%);
   --color-secondary-light:   hsl(210, 20%, 87%); 
   --color-primary-light:     hsl(210, 10%, 20%); 
   --color-tertiary-light:    hsl(210, 20%, 70%); 
