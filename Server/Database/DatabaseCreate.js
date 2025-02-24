@@ -8,6 +8,7 @@ const db = new sqlite3.Database('./monsters.db', (err) => {
   console.log('Connected to the monsters database.');
 });
 
+//TODO IMPLEMENT A WAY TO FETCH MONSTER ATTACKS AND STORE IT IN A COHERENT WAY
 db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS monsters (
     id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique identifier for each monster

@@ -42,6 +42,7 @@ export default function RandomCombatGenerator() {
                 <div className='grow-7 min-w-[80%]'>
                     <MonsterSelector monsters={monsterList}/>
                 </div>
+
             </div>
         </form>
     );

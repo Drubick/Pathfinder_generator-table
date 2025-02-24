@@ -6,7 +6,7 @@
 
 /* Light Mode - Versión Ajustada */
   --color-pre-primary-light: hsl(210, 15%, 92%);
-  --color-pre-primary-light-100: hsl(210, 15%, 88%);
+  --color-pre-primary-light-100: hsl(210, 15%, 85%);
   --color-secondary-light:   hsl(210, 20%, 87%); 
   --color-primary-light:     hsl(210, 10%, 20%); 
   --color-tertiary-light:    hsl(210, 20%, 70%); 
@@ -17,6 +17,7 @@
 
   /* Dark Mode */
   --color-pre-primary-dark: hsl(210, 15%, 10%); /* Background color de la página */
+  --color-pre-primary-dark-100: hsl(210, 15%, 16%); /* Background color de la página */
   --color-primary-dark:     hsl(210, 10%, 75%); /* Color del texto */
   --color-secondary-dark:   hsl(210, 20%, 5%); /* Background del menú de navegación */
   --color-tertiary-dark:    hsl(210, 20%, 20%); /* Color de los botones */

@@ -20,6 +20,7 @@ app.get("/monsters", async (req, res) => {
         }
     });
 
+
     try {
         const monsters = await DatabaseQuery(db, monsterData);
         res.json(monsters);

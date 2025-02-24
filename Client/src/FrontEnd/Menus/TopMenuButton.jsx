@@ -12,7 +12,7 @@ const navItems = [
         
     },
     {
-        title: "Random Generators", options: ["Combat Generator", "Map Generator"], colapsed: true, 
+        title: "Map", options: ["Map"], colapsed: true, 
     }
 ];
 
@@ -60,7 +60,7 @@ export default function TopMenuButton({setContent}) {
                         
                         {activeIndex === index && (
                             <div className="absolute bg-pre-primary-light dark:bg-pre-primary-dark 
-                            border-0 border-solid rounded drop-shadow-md hover:cursor-pointer">
+                            border-0 border-solid rounded drop-shadow-md hover:cursor-pointer z-20">
                                 {item.options.map((option, index) => {
                                     return (
                                         <div key={index} className="px-2 py-1 hover:bg-accent-light-2  dark:hover:bg-accent-dark-2"
