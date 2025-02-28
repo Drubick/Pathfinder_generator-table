@@ -1,89 +1,93 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useLayoutEffect, useState, useRef } from "react";
 import Forms from "../../UI/Forms";
 export default function Canvas() {
-    const canvasElementRef = useRef(null);
-    const isDrawingActiveRef = useRef(false);
-    const drawingPathsRef = useRef([]);
+    const canvasRef = useRef(null);
+    const [element, setElement] = useState([]);
+    const [drawing, setDrawing] = useState(false);
+    const [action, setAction] = useState("");
+    const handleRadioChange = (event) => {
+        setAction(event.target.value);
+        console.log(event.target.value); // Log the value to ensure it's correct
+    };
 
+    const history = (initialState, overWrite) =>{
+        const [index, setIndex] = useState(0);
+        const[history, setHistory] = useState([]);
+        const setState=(state) =>{
+            const newState = typeof state === "function" ? state(history[index]) : state;
+            setHistory(prevState => [...prevState, newState]);
+            setIndex(prevState => prevState+1);
 
-    useEffect(() => {
-        const canvas = canvasElementRef.current;
-        const context = canvas.getContext("2d");
+        }
 
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
+        return[history[index], setHistory]
+    };
 
-        const getMousePosition = (event) => {
-            return ({
-                x: event.clientX - canvas.getBoundingClientRect().left,
-                y: event.clientY - canvas.getBoundingClientRect().top,
-            });
-        };
+    useLayoutEffect(() => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
+        let currentPath = [];
+        let lastPoint = null;
 
         const handleMouseDown = (event) => {
-            isDrawingActiveRef.current = true;
-            const newMousePosition = getMousePosition(event);
-            drawingPathsRef.current.push([newMousePosition]);
-        };
-
-        const handleMouseUp = () => {
-            isDrawingActiveRef.current = false;
+            if(action === "Draw"){
+                setDrawing(true);
+                const startPoint = { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
+                currentPath = [startPoint];
+                lastPoint = startPoint;
+                ctx.beginPath();
+                ctx.moveTo(startPoint.x, startPoint.y);
+            }
         };
 
         const handleMouseMove = (event) => {
-            if (!isDrawingActiveRef.current) {
-                return;
-            }
-            const newMousePosition = getMousePosition(event);
-            const currentPath = drawingPathsRef.current[drawingPathsRef.current.length - 1];
-            const lastPosition = currentPath[currentPath.length - 1];
-            currentPath.push(newMousePosition);
-            drawLine(lastPosition.x, lastPosition.y, newMousePosition.x, newMousePosition.y);
-        };
-
-        const drawLine = (x1, y1, x2, y2) => {
-            context.strokeStyle = "black";
-            context.lineWidth = 5;
-            context.lineCap = "round";
-            context.beginPath();
-            context.moveTo(x1, y1);
-            context.lineTo(x2, y2);
-            context.stroke();
-        };
-
-        const redrawCanvas = (paths) => {
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            paths.forEach((path) => {
-                for (let i = 1; i < path.length; i++) {
-                    drawLine(path[i - 1].x, path[i - 1].y, path[i].x, path[i].y);
+            if(action === "Draw")
+            {
+                if (!drawing) return;
+                const newPoint = { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
+                currentPath.push(newPoint);
+                if (lastPoint) {
+                    const midPoint = {
+                        x: (lastPoint.x + newPoint.x) / 2,
+                        y: (lastPoint.y + newPoint.y) / 2,
+                    };
+                    ctx.quadraticCurveTo(lastPoint.x, lastPoint.y, midPoint.x, midPoint.y);
+                    ctx.stroke();
                 }
-            });
+                lastPoint = newPoint;
+           } 
         };
 
-        const handleUndo = (event) => {
-            if (event.ctrlKey && event.key === 'z') {
-                drawingPathsRef.current.pop();
-                redrawCanvas(drawingPathsRef.current);
+        const handleMouseUp = () => {
+            if(action=== "Draw"){
+                setDrawing(false);
+                setElement(prevElements => [...prevElements, currentPath]);
             }
         };
 
-        window.addEventListener("keydown", handleUndo);
         canvas.addEventListener("mousedown", handleMouseDown);
-        canvas.addEventListener("mouseup", handleMouseUp);
         canvas.addEventListener("mousemove", handleMouseMove);
+        canvas.addEventListener("mouseup", handleMouseUp);
 
         return () => {
-            window.removeEventListener("keydown", handleUndo);
             canvas.removeEventListener("mousedown", handleMouseDown);
-            canvas.removeEventListener("mouseup", handleMouseUp);
             canvas.removeEventListener("mousemove", handleMouseMove);
+            canvas.removeEventListener("mouseup", handleMouseUp);
         };
-    }, []);
+    }, [action, drawing]);
 
     return (
-        <div className="">
-            <Forms type = {"checkbox"} name={"Draw"} label={"Draw"}/>
-            <canvas ref={canvasElementRef} className="bg-pre-primary-light-100 border-1 border-black"></canvas>
+        <div>
+            <div>
+            <Forms 
+                type={"radio"} 
+                label={"Action"} 
+                name={"action"} 
+                options={["Draw", "Erase", "Move"]} 
+                handleRadioChange={handleRadioChange} 
+            />            
+            </div>
+            <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight} />
         </div>
     );
-};
+}

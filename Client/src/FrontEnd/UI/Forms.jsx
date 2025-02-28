@@ -1,11 +1,17 @@
 import { useState } from 'react';
 
-export default function Forms({ label, type, name, placeholder, options, handleCheckboxChange }) {
+export default function Forms({ label, type, name, placeholder, options, handleCheckboxChange, handleRadioChange }) {
     const [isChecked, setIsChecked] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('');
 
     const onCheckboxChange = (event) => {
         setIsChecked(event.target.checked);
         handleCheckboxChange(event);
+    };
+
+    const onRadioChange = (event) => {
+        setSelectedOption(event.target.value);
+        handleRadioChange(event);
     };
 
     return (
@@ -39,6 +45,24 @@ export default function Forms({ label, type, name, placeholder, options, handleC
                                 checked={isChecked}
                                 onChange={onCheckboxChange}
                             />
+                        </div>
+                    );
+                } else if (type === 'radio') {
+                    return (
+                        <div className="flex place-items-center">
+                            {options.map((option, index) => (
+                                <label key={index} className="ml-1 text-primary-light dark:text-primary-dark mr-3">
+                                    <input
+                                        className="focus:outline-none focus:shadow-outline border rounded leading-tight px-3 py-1 text-primary-light dark:text-primary-dark "
+                                        type="radio"
+                                        name={name}
+                                        value={option}
+                                        checked={selectedOption === option}
+                                        onChange={onRadioChange}
+                                    />
+                                    {option}
+                                </label>
+                            ))}
                         </div>
                     );
                 } else {
