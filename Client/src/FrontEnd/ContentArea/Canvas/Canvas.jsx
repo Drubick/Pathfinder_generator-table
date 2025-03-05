@@ -6,13 +6,17 @@ export default function Canvas() {
     const imageCanvasRef = useRef(null);
     const drawCanvasRef = useRef(null);
     const contextRef = useRef(null);
+    const actionRef = useRef("");
     const [drawColor, setDrawColor] = useState("#000000");
     const [drawWidth, setDrawWidth] = useState(2);
     const [restoreArray, setRestoreArray] = useState([]);
     const [index, setIndex] = useState(0);
     const [action, setAction] = useState("");
+
     const handleRadioChange = (event) => {
-        setAction(event.target.value);
+        const newAction = event.target.value;
+        setAction(newAction);
+        actionRef.current = newAction;
     };
 
     const undo = useCallback(() => {
@@ -73,7 +77,7 @@ export default function Canvas() {
     }, [undo]);
 
     useLayoutEffect(() => {
-        let isDrawing = false;
+        let mouseDown = false;
         const canvas = drawCanvasRef.current;
         const context = canvas.getContext("2d");
         contextRef.current = context;
@@ -83,29 +87,47 @@ export default function Canvas() {
         setIndex(1);
   
         const start = (event) => {
-            isDrawing = true;
-            context.beginPath();
-            context.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
-            event.preventDefault();
+            mouseDown = true;
+            if (actionRef.current === "Draw" || actionRef.current === "Erase") {
+                const rect = canvas.getBoundingClientRect();
+                context.beginPath();
+                context.moveTo(
+                    (event.clientX - rect.left) * (canvas.width / rect.width),
+                    (event.clientY - rect.top) * (canvas.height / rect.height)
+                );
+                event.preventDefault();
+            }
+
         };
 
         const draw = (event) => {
-            if (isDrawing) {
-                context.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+            if (mouseDown && (actionRef.current === "Draw" || actionRef.current === "Erase")) {
+                const rect = canvas.getBoundingClientRect();
+                context.lineTo(
+                    (event.clientX - rect.left) * (canvas.width / rect.width),
+                    (event.clientY - rect.top) * (canvas.height / rect.height)
+                );
                 context.lineCap = "round";
                 context.lineJoin = "round";
+                if (actionRef.current === "Erase"){
+                    context.globalCompositeOperation = "destination-out";
+                    context.strokeStyle = "rgba(0,0,0,1)";
+
+                }else
+                    context.globalCompositeOperation = "source-over"
                 context.stroke();
             }
         };
 
         const stop = (event) => {
-            if (isDrawing) {
+            mouseDown = false;
+            event.preventDefault();
+            if (mouseDown && (actionRef.current === "Draw" || actionRef.current === "Erase")) {
                 context.stroke();
                 context.closePath();
-                isDrawing = false;
             }
-            event.preventDefault();
-
+          
+        
             const newImageData = context.getImageData(0, 0, canvas.width, canvas.height);
             setRestoreArray((prevArray) => [...prevArray, newImageData]);
             setIndex((prevIndex) => prevIndex + 1);
@@ -145,8 +167,8 @@ export default function Canvas() {
     };
 
     return (
-        <div>
-            <div>
+        <div className="overflow-hidden h-full w-full p-0.5">
+            <div className=" flex items-center">
                 <Forms 
                     type={"radio"} 
                     label={"Action"} 
@@ -156,6 +178,8 @@ export default function Canvas() {
                 />
                 <Button text={"Undo"} action={undo} />
                 <Button text={"Clear"} action={clearCanvas} />
+                <Button text={"Zoom In"}/>
+                <Button text={"Zoom In"}/>
                 <input 
                     type="color"
                     value={drawColor}
@@ -165,7 +189,7 @@ export default function Canvas() {
                     type="range"
                     value={drawWidth}
                     onChange={handleWidthChange}
-                    min={1} max={100}
+                    min={0.1} max={100}
                 />
                 <input 
                     type="file"
@@ -173,18 +197,18 @@ export default function Canvas() {
                     onChange={handleImageUpload}
                 />
             </div>
-            <div style={{ position: "relative" }}>
+            <div className="relative w-full h-full ">
                 <canvas 
-                    ref={imageCanvasRef} 
-                    width={window.innerWidth} 
-                    height={window.innerHeight} 
-                    style={{ position: "absolute", top: 0, left: 0, zIndex: 0 }}
+                    ref={imageCanvasRef}
+                    width={1920} 
+                    height={1080} 
+                    className="absolute top-0 left-0 z-0 border-2 h-full w-full"
                 />
                 <canvas 
                     ref={drawCanvasRef} 
-                    width={window.innerWidth} 
-                    height={window.innerHeight} 
-                    style={{ position: "absolute", top: 0, left: 0, zIndex: 1 }}
+                    width={1920} 
+                    height={1080}  
+                    className="absolute top-0 left-0 z-10 h-full w-full"
                 />
             </div>
         </div>
