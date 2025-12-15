@@ -13,7 +13,7 @@ export default function MonsterStats({ monster }) {
     };
 
     return (
-        <div className="flex flex-col border-t-2 mt-2 pt-2">
+        <div className="flex flex-col pt-2 pb-4">
             <div>AC: {monster.ac}</div>
             <div>HP: {monster.hp}</div>
             <div>LVL: {monster.level}</div>
@@ -27,11 +27,11 @@ export default function MonsterStats({ monster }) {
             <div>Fortitude Save: {monster.fortitude_save}</div>
             <div>Reflex Save: {monster.reflex_save}</div>
             <div>Will Save: {monster.will_save}</div>
-            <div className="flex items-center justify-center my-2">
+            <div className="flex items-center justify-center my-2 pb-2">
                 <Button text={"Show More"} action={toggleShowMore} type="button"/>
             </div>
             {showMore && (
-                <div>
+                <div className="pb-2">
                     <div>Type: {monster.type}</div>
                     <div>Size: {monster.size}</div>
                     <div>Immunities: {monster.immunities}</div>

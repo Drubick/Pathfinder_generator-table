@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function Forms({ label, type, name, placeholder, options, handleCheckboxChange, handleRadioChange }) {
+export default function Forms({ label, type, name, placeholder, options, handleCheckboxChange, handleRadioChange, value, onChange }) {
     const [isChecked, setIsChecked] = useState(false);
     const [selectedOption, setSelectedOption] = useState('');
 
@@ -15,22 +15,26 @@ export default function Forms({ label, type, name, placeholder, options, handleC
     };
 
     return (
-        <div>
-            <label htmlFor={name} className="text-primary-light pl-1 dark:text-primary-dark">{label}</label>
+        <div className="w-full">
+            <label htmlFor={name} className="text-primary-light pl-1 dark:text-primary-dark text-xs sm:text-sm">{label}</label>
             <br />
             {(() => {
                 if (type === 'select') {
                     return (
                         <select
-                            className="w-50 focus:outline-none focus:shadow-outline border rounded leading-tight px-3 py-1 text-primary-light dark:text-primary-dark "
+                            className="w-full focus:outline-none focus:shadow-outline border rounded leading-tight px-2 sm:px-3 py-1 text-xs sm:text-sm text-primary-light dark:text-primary-dark "
                             name={name}
                             id={name}
                         >
-                            {options.map((option, index) => (
-                                <option className="bg-pre-primary-light dark:bg-pre-primary-dark text-left" key={index} value={option}>
-                                    {option}
-                                </option>
-                            ))}
+                            {options.map((option, index) => {
+                                const optionValue = typeof option === 'object' ? option.value : option;
+                                const optionLabel = typeof option === 'object' ? option.label : option;
+                                return (
+                                    <option className="bg-pre-primary-light dark:bg-pre-primary-dark text-left" key={index} value={optionValue}>
+                                        {optionLabel}
+                                    </option>
+                                );
+                            })}
                         </select>
                     );
                 } else if (type === 'checkbox') {
@@ -65,14 +69,29 @@ export default function Forms({ label, type, name, placeholder, options, handleC
                             ))}
                         </div>
                     );
-                } else {
+                } else if (type === 'number'){
                     return (
                         <input
-                            className="[&::-webkit-inner-spin-button]:appearance-none w-50 focus:outline-none focus:shadow-outline border rounded leading-tight px-3 py-1 text-primary-light dark:text-primary-dark "
+                            className="[&::-webkit-inner-spin-button]:appearance-none w-full focus:outline-none focus:shadow-outline border rounded leading-tight px-2 sm:px-3 py-1 text-xs sm:text-sm text-primary-light dark:text-primary-dark "
                             type={type}
                             name={name}
                             id={name}
                             placeholder={placeholder}
+                            value={value}
+                            onChange={onChange}
+                        />
+                    );
+                }
+                else if (type === 'text'){
+                    return (
+                        <input
+                            className="w-full focus:outline-none focus:shadow-outline border rounded leading-tight px-2 sm:px-3 py-1 text-xs sm:text-sm text-primary-light dark:text-primary-dark "
+                            type={type}
+                            name={name}
+                            id={name}
+                            placeholder={placeholder}
+                            value={value}
+                            onChange={onChange}
                         />
                     );
                 }

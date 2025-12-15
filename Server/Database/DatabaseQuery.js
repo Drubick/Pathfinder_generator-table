@@ -2,7 +2,7 @@ import sqlite3 from 'sqlite3';
 
 sqlite3.verbose();
 
-export default function DatabaseQuery(db, monsterData, limit = 2) {
+export default function DatabaseQuery(db, monsterData, limit = null) {
     return new Promise((resolve, reject) => {
         let query = 'SELECT * FROM monsters WHERE 1=1';
         const params = [];
@@ -59,10 +59,28 @@ export default function DatabaseQuery(db, monsterData, limit = 2) {
             query += ' AND languages LIKE ?';
             params.push(`%${monsterData.languages}%`);
         }
-        if (monsterData.level) {
-            query += ' AND level = ?';
-            params.push(monsterData.level);
+        if (monsterData.size) {
+            query += ' AND size = ?';
+            params.push(monsterData.size);
         }
+        if (monsterData.type) {
+            query += ' AND type LIKE ?';
+            params.push(`%${monsterData.type}%`);
+        }
+     if (monsterData.minLevel && monsterData.maxLevel) {
+        query += ' AND level >= ? AND level <= ?';
+        params.push(monsterData.minLevel);
+        params.push(monsterData.maxLevel);
+    } else if (monsterData.minLevel) {
+        query += ' AND level >= ?';
+        params.push(monsterData.minLevel);
+    } else if (monsterData.maxLevel) {
+        query += ' AND level <= ?';
+        params.push(monsterData.maxLevel);
+    } else if (monsterData.level) {
+        query += ' AND level = ?';
+        params.push(monsterData.level);
+    }
 
         query += ' ORDER BY RANDOM()';
 

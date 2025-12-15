@@ -36,6 +36,41 @@ app.get("/monsters", async (req, res) => {
     }
 });
 
+app.get("/monster-types", async (req, res) => {
+    const db = new sqlite3.Database('./monsters.db', (err) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send("internal server error");
+            return;
+        }
+    });
+
+    try {
+        db.all("SELECT DISTINCT type FROM monsters", [], (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                res.status(500).send("internal server error");
+                return;
+            }
+            
+            const typesSet = new Set();
+            rows.forEach(row => {
+                const types = row.type.split(',').map(t => t.trim());
+                types.forEach(type => typesSet.add(type));
+            });
+            
+            const uniqueTypes = Array.from(typesSet).sort();
+            res.json(uniqueTypes);
+            
+            db.close();
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("internal server error");
+        db.close();
+    }
+});
+
 app.listen(5000, () => {
     console.log('Server started on port 5000');
 });

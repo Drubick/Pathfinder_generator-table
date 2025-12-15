@@ -93,7 +93,6 @@ async function populateEncounter(data){
     }
 }
 
-// TODO: IMPLEMENT A WAY TO SELECT THE NUMBER OF MONSTERS TO GENERATE
 async function randomEncounterGenerator(partySize, PartyLevel, encounterThreath, minLevel , maxLevel){
     let data = {
         budgetXp: 0,

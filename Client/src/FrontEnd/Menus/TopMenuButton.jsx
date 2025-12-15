@@ -2,14 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 
 const navItems = [
     {
-        title: "Random Generators", options: ["Combat Generator", "Map Generator"], colapsed: true, 
+        title: "Random Generators", options: ["Combat Generator"], colapsed: true, 
     },
     {
-        title: "Builders", options: ["Encounter Builders", "Map Builder"], colapsed: true
-    },
-    {
-        title: "AI Assistance", options: ["AI General chatbot", "AI Combat generator"], colapsed: true
-        
+        title: "Builders", options: ["Encounter Builders"], colapsed: true
     },
     {
         title: "Map", options: ["Map"], colapsed: true, 

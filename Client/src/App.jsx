@@ -1,7 +1,6 @@
 import { useState, useEffect} from 'react';
 import './App.css';
 import ContentArea from './FrontEnd/ContentArea/ContentArea';
-import LeftMenu from './FrontEnd/Menus/LeftMenu';
 import TopMenu from './FrontEnd/Menus/TopMenu';
 import axios from "axios";
 
@@ -18,14 +17,19 @@ function App() {
 
 
   const [content, setContent] = useState('');
+  const [savedMonsters, setSavedMonsters] = useState([]);
+
   return (
  
-    <div className=' w-full h-screen flex flex-col absolute top-0 left-0 text-primary-light dark:text-primary-dark '>
+    <div className='w-full min-h-screen flex flex-col text-primary-light dark:text-primary-dark bg-pre-primary-light dark:bg-pre-primary-dark'>
       <TopMenu setContent={setContent} />
-        <div className='flex flex-row h-screen'>
-          {/* <LeftMenu  setContent={setContent}/> */}
-          <div className="flex-grow-60 bg-pre-primary-light dark:bg-pre-primary-dark "> {/* Main content area */}
-            <ContentArea content={content}/>
+        <div className='flex flex-row flex-1 min-h-0'>
+          <div className="flex-1 bg-pre-primary-light dark:bg-pre-primary-dark overflow-auto"> {/* Main content area */}
+            <ContentArea
+            content={content}
+            savedMonsters={savedMonsters}
+            setSavedMonsters={setSavedMonsters}
+            />
           </div>
         </div>
     </div>
